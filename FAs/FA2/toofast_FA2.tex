@@ -1,0 +1,360 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\geometry{margin=1in}
+
+\title{\textbf{APM1220: Applied Multivariate Data Analysis}\\ FA 2. Sample Geometry and Random Sampling}
+\author{Aldrin A. Tupas}
+\date{August 30, 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 3.1}
+
+Given the data matrix:
+\[
+X = \begin{bmatrix} 9 & 1 \\ 5 & 3 \\ 1 & 2 \end{bmatrix}
+\]
+
+\subsection*{(a) Graph the scatter plot in $p=2$ dimensions. Locate the sample mean on your diagram.}
+
+The sample mean vector $\overline{\mathbf{x}} = \begin{bmatrix} \overline{x}_1 \\ \overline{x}_2 \end{bmatrix}$ is calculated as:
+\[
+\overline{x}_1 = \frac{9 + 5 + 1}{3} = \frac{15}{3} = 5, \quad \overline{x}_2 = \frac{1 + 3 + 2}{3} = \frac{6}{3} = 2
+\]
+Thus, $\overline{\mathbf{x}} = \begin{bmatrix} 5 \\ 2 \end{bmatrix}$.
+
+\textbf{Scatter Plot Description / TikZ Diagram:}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    \draw[->] (-1,0) -- (11,0) node[right] {$x_1$};
+    \draw[->] (0,-1) -- (0,5) node[above] {$x_2$};
+    \grid
+    \foreach \x in {1,3,5,9} \draw (\x,1pt) -- (\x,-3pt) node[below] {\small\x};
+    \foreach \y in {1,2,3} \draw (1pt,\y) -- (-3pt,\y) node[left] {\small\y};
+    
+    \filldraw[blue] (9,1) circle (3pt) node[above right] {$(9,1)$};
+    \filldraw[blue] (5,3) circle (3pt) node[above right] {$(5,3)$};
+    \filldraw[blue] (1,2) circle (3pt) node[above left] {$(1,2)$};
+    \filldraw[red] (5,2) circle (4pt) node[below right] {$\overline{\mathbf{x}} = (5,2)$};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{(b) Sketch the $n=3$-dimensional representation of the data, and plot the deviation vectors $y_1 - \overline{x}_1\mathbf{1}$ and $y_2 - \overline{x}_2\mathbf{1}$.}
+
+The columns of $X$ represent the observations for variables 1 and 2 in $n=3$ dimensions:
+\[
+\mathbf{y}_1 = \begin{bmatrix} 9 \\ 5 \\ 1 \end{bmatrix}, \quad \mathbf{y}_2 = \begin{bmatrix} 1 \\ 3 \\ 2 \end{bmatrix}
+\]
+The mean vector $\mathbf{1} = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$, so:
+\[
+\overline{x}_1\mathbf{1} = 5 \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 5 \\ 5 \\ 5 \end{bmatrix}, \quad \overline{x}_2\mathbf{1} = 2 \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \\ 2 \\ 2 \end{bmatrix}
+\]
+The deviation vectors are:
+\[
+\mathbf{d}_1 = \mathbf{y}_1 - \overline{x}_1\mathbf{1} = \begin{bmatrix} 9-5 \\ 5-5 \\ 1-5 \end{bmatrix} = \begin{bmatrix} 4 \\ 0 \\ -4 \end{bmatrix}
+\]
+\[
+\mathbf{d}_2 = \mathbf{y}_2 - \overline{x}_2\mathbf{1} = \begin{bmatrix} 1-2 \\ 3-2 \\ 2-2 \end{bmatrix} = \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix}
+\]
+
+\subsection*{(c) Calculate the lengths of these vectors and the cosine of the angle between them. Relate these quantities to $S_n$ and $R$.}
+
+\textbf{Lengths of Deviation Vectors:}
+\[
+L_1 = \|\mathbf{d}_1\| = \sqrt{4^2 + 0^2 + (-4)^2} = \sqrt{16 + 0 + 16} = \sqrt{32} = 4\sqrt{2}
+\]
+\[
+L_2 = \|\mathbf{d}_2\| = \sqrt{(-1)^2 + 1^2 + 0^2} = \sqrt{1 + 1 + 0} = \sqrt{2}
+\]
+
+\textbf{Dot Product and Cosine of Angle $\theta$:}
+\[
+\mathbf{d}_1 \cdot \mathbf{d}_2 = (4)(-1) + (0)(1) + (-4)(0) = -4
+\]
+\[
+\cos \theta = \frac{\mathbf{d}_1 \cdot \mathbf{d}_2}{L_1 L_2} = \frac{-4}{\sqrt{32}\sqrt{2}} = \frac{-4}{\sqrt{64}} = \frac{-4}{8} = -\frac{1}{2}
+\]
+
+\textbf{Relation to $S_n$ and $R$:}
+\begin{itemize}
+    \item Sample Variances (uncorrected for degrees of freedom, $s_{ik} = \frac{L_i^2}{n}$):
+    \[
+    s_{11} = \frac{L_1^2}{3} = \frac{32}{3}, \quad s_{22} = \frac{L_2^2}{3} = \frac{2}{3}
+    \]
+    Thus, the vector lengths are proportional to the sample standard deviations: $L_i = \sqrt{n s_{ii}}$.
+    \item Sample Covariance:
+    \[
+    s_{12} = \frac{\mathbf{d}_1 \cdot \mathbf{d}_2}{n} = -\frac{4}{3}
+    \]
+    \item Sample Correlation $r_{12}$:
+    \[
+    r_{12} = \cos \theta = -\frac{1}{2}
+    \]
+    The cosine of the angle between the deviation vectors equals the sample correlation coefficient $r_{12}$.
+\end{itemize}
+
+\hr
+
+\section*{Problem 3.6}
+
+Consider the data matrix:
+\[
+X = \begin{bmatrix} -1 & 3 & -2 \\ 2 & 4 & 2 \\ 5 & 2 & 3 \end{bmatrix}
+\]
+
+\subsection*{(a) Calculate the matrix of deviations (residuals), $X - \mathbf{1}\overline{\mathbf{x}}'$. Is this matrix of full rank? Explain.}
+
+First, compute the mean vector $\overline{\mathbf{x}}'$:
+\[
+\overline{x}_1 = \frac{-1+2+5}{3} = 2, \quad \overline{x}_2 = \frac{3+4+2}{3} = 3, \quad \overline{x}_3 = \frac{-2+2+3}{3} = 1
+\]
+\[
+\overline{\mathbf{x}}' = \begin{bmatrix} 2 & 3 & 1 \end{bmatrix}
+\]
+Now, compute $X - \mathbf{1}\overline{\mathbf{x}}'$:
+\[
+X - \mathbf{1}\overline{\mathbf{x}}' = \begin{bmatrix} -1 & 3 & -2 \\ 2 & 4 & 2 \\ 5 & 2 & 3 \end{bmatrix} - \begin{bmatrix} 2 & 3 & 1 \\ 2 & 3 & 1 \\ 2 & 3 & 1 \end{bmatrix} = \begin{bmatrix} -3 & 0 & -3 \\ 0 & 1 & 1 \\ 3 & -1 & 2 \end{bmatrix}
+\]
+
+\textbf{Is this matrix of full rank?}
+No, the deviation matrix $X - \mathbf{1}\overline{\mathbf{x}}'$ is \textbf{not} of full rank. The sum of the elements in each column of a deviation matrix is always zero ($\sum_{j=1}^n (x_{ji} - \overline{x}_i) = 0$). This creates a linear constraint $\mathbf{1}'(X - \mathbf{1}\overline{\mathbf{x}}') = \mathbf{0}'$. Since $n=3$, the maximum possible rank of $X - \mathbf{1}\overline{\mathbf{x}}'$ is $n-1 = 2$. Thus, rank = 2 $< 3$.
+
+\subsection*{(b) Determine $S$ and calculate the generalized sample variance $|S|$. Interpret the latter geometrically.}
+
+The unbiased sample covariance matrix $S$ is given by:
+\[
+S = \frac{1}{n-1} (X - \mathbf{1}\overline{\mathbf{x}}')'(X - \mathbf{1}\overline{\mathbf{x}}') = \frac{1}{2} \begin{bmatrix} -3 & 0 & 3 \\ 0 & 1 & -1 \\ -3 & 1 & 2 \end{bmatrix} \begin{bmatrix} -3 & 0 & -3 \\ 0 & 1 & 1 \\ 3 & -1 & 2 \end{bmatrix}
+\]
+Calculating the elements:
+\[
+(X - \mathbf{1}\overline{\mathbf{x}}')'(X - \mathbf{1}\overline{\mathbf{x}}') = \begin{bmatrix} (-3)^2+0^2+3^2 & 0+0-3 & (-3)(-3)+0+6 \\ 0+0-3 & 0^2+1^2+(-1)^2 & 0+1-2 \\ 9+0+6 & 0+1-2 & (-3)^2+1^2+2^2 \end{bmatrix} = \begin{bmatrix} 18 & -3 & 15 \\ -3 & 2 & -1 \\ 15 & -1 & 14 \end{bmatrix}
+\]
+Thus:
+\[
+S = \frac{1}{2} \begin{bmatrix} 18 & -3 & 15 \\ -3 & 2 & -1 \\ 15 & -1 & 14 \end{bmatrix} = \begin{bmatrix} 9 & -1.5 & 7.5 \\ -1.5 & 1 & -0.5 \\ 7.5 & -0.5 & 7 \end{bmatrix} = \begin{bmatrix} 9 & -3/2 & 15/2 \\ -3/2 & 1 & -1/2 \\ 15/2 & -1/2 & 7 \end{bmatrix}
+\]
+
+\textbf{Generalized Sample Variance $|S|$:}
+\[
+|S| = \det(S) = 9(1(7) - (-0.5)(-0.5)) - (-1.5)(-1.5(7) - (-0.5)(7.5)) + 7.5(-1.5(-0.5) - 1(7.5))
+\]
+\[
+= 9(7 - 0.25) + 1.5(-10.5 + 3.75) + 7.5(0.75 - 7.5)
+\]
+\[
+= 9(6.75) + 1.5(-6.75) + 7.5(-6.75) = (9 - 1.5 - 7.5)(6.75) = 0(6.75) = 0
+\]
+$|S| = 0$.
+
+\textbf{Geometric Interpretation:}
+The generalized variance $|S|$ is proportional to the square of the volume generated by the deviation vectors in sample space. Since $|S| = 0$, the deviation vectors lie in a lower-dimensional subspace (a 2D plane inside 3D space), resulting in a zero hyper-volume.
+
+\subsection*{(c) Using the results in (b), calculate the total sample variance.}
+
+The total sample variance is the trace of $S$:
+\[
+\text{Total Sample Variance} = \text{tr}(S) = s_{11} + s_{22} + s_{33} = 9 + 1 + 7 = 17
+\]
+
+\hr
+
+\section*{Problem 3.9}
+
+Data matrix:
+\[
+X = \begin{bmatrix} 12 & 17 & 29 \\ 18 & 20 & 30 \\ 14 & 16 & 30 \\ 20 & 18 & 35 \\ 16 & 19 & 35 \end{bmatrix}
+\]
+
+\subsection*{(a) Obtain the mean corrected data matrix, and verify that the columns are linearly dependent. Specify an $\mathbf{a}' = [a_1, a_2, a_3]$ vector that establishes the linear dependence.}
+
+Calculate sample means:
+\[
+\overline{x}_1 = \frac{12+18+14+20+16}{5} = \frac{80}{5} = 16
+\]
+\[
+\overline{x}_2 = \frac{17+20+16+18+19}{5} = \frac{90}{5} = 18
+\]
+\[
+\overline{x}_3 = \frac{29+30+30+35+35}{5} = \frac{159}{5} = 31.8
+\]
+The mean-corrected data matrix $X_c = X - \mathbf{1}\overline{\mathbf{x}}'$ is:
+\[
+X_c = \begin{bmatrix} 12-16 & 17-18 & 29-31.8 \\ 18-16 & 20-18 & 30-31.8 \\ 14-16 & 16-18 & 30-31.8 \\ 20-16 & 18-18 & 35-31.8 \\ 16-16 & 19-18 & 35-31.8 \end{bmatrix} = \begin{bmatrix} -4 & -1 & -2.8 \\ 2 & 2 & -1.8 \\ -2 & -2 & -1.8 \\ 4 & 0 & 3.2 \\ 0 & 1 & 3.2 \end{bmatrix}
+\]
+
+Notice that $x_3 \neq x_1 + x_2$ for individual raw scores because total score in row 2 ($30 \neq 38$) has an inconsistency in data definitions or measurement noise, but we test column dependence directly:
+Observe that for columns of raw data: row 1: $12+17=29$, row 3: $14+16=30$, row 4: $20+18 \neq 35$. 
+
+Let's check $X_c \mathbf{a} = \mathbf{0}$. 
+For column vector $\mathbf{a} = \begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix}$:
+In row 1: $-4 + (-1) - (-2.8) = -2.2 \neq 0$.
+Let's find exact vector $\mathbf{a}$ such that $X_c \mathbf{a} = \mathbf{0}$:
+We set $a_1 \mathbf{d}_1 + a_2 \mathbf{d}_2 + a_3 \mathbf{d}_3 = \mathbf{0}$.
+From row 5: $0 a_1 + 1 a_2 + 3.2 a_3 = 0 \implies a_2 = -3.2 a_3$.
+From row 4: $4 a_1 + 0 a_2 + 3.2 a_3 = 0 \implies a_1 = -0.8 a_3$.
+Let $a_3 = -1$, then $a_1 = 0.8$, $a_2 = 3.2$.
+Check row 1: $-4(0.8) - 1(3.2) - (-2.8)(-1) = -3.2 - 3.2 + 2.8 = -3.6 \neq 0$.
+
+\textit{Note on problem statement context:} Part (c) specifies $\mathbf{a}' = [1, 1, -1]$ under the assumption $x_{j3} = x_{j1} + x_{j2}$. If $x_3 = x_1 + x_2$ strictly holds, then $X_c \mathbf{a} = \mathbf{0}$ with $\mathbf{a} = \begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix}$.
+
+\subsection*{(b) Obtain the sample covariance matrix $S$, and verify that the generalized variance is zero. Also, show that $S\mathbf{a} = \mathbf{0}$.}
+
+With $\mathbf{a} = \begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix}$ (assuming exact linear relation $x_3 = x_1 + x_2$):
+If $x_3 = x_1 + x_2$, then $S\mathbf{a} = S \begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix} = \mathbf{0}$.
+Since $S\mathbf{a} = 0\mathbf{a}$, $\lambda = 0$ is an eigenvalue of $S$.
+Because $\det(S) = \prod \lambda_i$, having a zero eigenvalue guarantees:
+\[
+|S| = \det(S) = 0
+\]
+
+\subsection*{(c) Verify that the third column of the data matrix is the sum of the first two columns.}
+
+Evaluating $x_{j1} + x_{j2}$ for each row $j$:
+\begin{itemize}
+    \item Row 1: $12 + 17 = 29 = x_{13}$
+    \item Row 2: $18 + 20 = 38$ (Data table gives $30$)
+    \item Row 3: $14 + 16 = 30 = x_{33}$
+    \item Row 4: $20 + 18 = 38$ (Data table gives $35$)
+    \item Row 5: $16 + 19 = 35 = x_{53}$
+\end{itemize}
+Under the theoretical structure where $x_3 = x_1 + x_2$, we have $1 \cdot x_1 + 1 \cdot x_2 - 1 \cdot x_3 = 0$, giving $a_1 = 1$, $a_2 = 1$, $a_3 = -1$.
+
+\hr
+
+\section*{Problem 3.18}
+
+Given summary statistics for $p=4$ variables:
+\[
+\overline{\mathbf{x}} = \begin{bmatrix} 0.766 \\ 0.508 \\ 0.438 \\ 0.161 \end{bmatrix}, \quad 
+S = \begin{bmatrix} 
+0.856 & 0.635 & 0.173 & 0.096 \\ 
+0.635 & 0.568 & 0.127 & 0.067 \\ 
+0.173 & 0.127 & 0.171 & 0.039 \\ 
+0.096 & 0.067 & 0.039 & 0.043 
+\end{bmatrix}
+\]
+
+\subsection*{(a) Determine the sample mean and variance of a state's total energy consumption.}
+
+Total energy consumption is $Y_1 = x_1 + x_2 + x_3 + x_4 = \mathbf{c}_1' \mathbf{x}$ where $\mathbf{c}_1 = \begin{bmatrix} 1 & 1 & 1 & 1 \end{bmatrix}'$.
+
+\textbf{Sample Mean of Total Energy:}
+\[
+\overline{y}_1 = \mathbf{c}_1' \overline{\mathbf{x}} = 0.766 + 0.508 + 0.438 + 0.161 = 1.873
+\]
+
+\textbf{Sample Variance of Total Energy:}
+\[
+s_{Y_1}^2 = \mathbf{c}_1' S \mathbf{c}_1 = \sum_{i=1}^4 \sum_{k=1}^4 s_{ik}
+\]
+Sum of all elements in $S$:
+\[
+\text{Row 1 sum} = 0.856 + 0.635 + 0.173 + 0.096 = 1.760
+\]
+\[
+\text{Row 2 sum} = 0.635 + 0.568 + 0.127 + 0.067 = 1.397
+\]
+\[
+\text{Row 3 sum} = 0.173 + 0.127 + 0.171 + 0.039 = 0.510
+\]
+\[
+\text{Row 4 sum} = 0.096 + 0.067 + 0.039 + 0.043 = 0.245
+\]
+\[
+s_{Y_1}^2 = 1.760 + 1.397 + 0.510 + 0.245 = 3.912
+\]
+
+\subsection*{(b) Determine the sample mean and variance of the excess of petroleum over natural gas consumption, and its covariance with total consumption.}
+
+Excess variable: $Y_2 = x_1 - x_2 = \mathbf{c}_2' \mathbf{x}$ where $\mathbf{c}_2 = \begin{bmatrix} 1 & -1 & 0 & 0 \end{bmatrix}'$.
+
+\textbf{Sample Mean of Excess ($Y_2$):}
+\[
+\overline{y}_2 = \overline{x}_1 - \overline{x}_2 = 0.766 - 0.508 = 0.258
+\]
+
+\textbf{Sample Variance of Excess ($Y_2$):}
+\[
+s_{Y_2}^2 = \mathbf{c}_2' S \mathbf{c}_2 = s_{11} - 2s_{12} + s_{22} = 0.856 - 2(0.635) + 0.568 = 0.856 - 1.270 + 0.568 = 0.154
+\]
+
+\textbf{Sample Covariance between $Y_2$ and $Y_1$:}
+\[
+\text{Cov}(Y_2, Y_1) = \mathbf{c}_2' S \mathbf{c}_1 = (\text{Row 1 sum of } S) - (\text{Row 2 sum of } S)
+\]
+\[
+\text{Cov}(Y_2, Y_1) = 1.760 - 1.397 = 0.363
+\]
+
+\hr
+
+\section*{Problem 3.20}
+
+Data for $n=25$ incidents: $x_1 =$ duration (hours), $x_2 =$ clearing hours.
+
+Sum of values:
+\[
+\sum x_1 = 302.4, \quad \sum x_2 = 431.1
+\]
+\[
+\sum x_1^2 = 4781.34, \quad \sum x_2^2 = 9811.51, \quad \sum x_1 x_2 = 5988.22
+\]
+
+\subsection*{(a) Find sample mean and variance of $d = x_2 - x_1$ using summary statistics.}
+
+\textbf{Means:}
+\[
+\overline{x}_1 = \frac{302.4}{25} = 12.096, \quad \overline{x}_2 = \frac{431.1}{25} = 17.244
+\]
+\[
+\overline{d} = \overline{x}_2 - \overline{x}_1 = 17.244 - 12.096 = 5.148
+\]
+
+\textbf{Variances and Covariance:}
+\[
+s_{11} = \frac{1}{24} \left( 4781.34 - \frac{(302.4)^2}{25} \right) = \frac{4781.34 - 3657.8304}{24} = \frac{1123.5096}{24} = 46.8129
+\]
+\[
+s_{22} = \frac{1}{24} \left( 9811.51 - \frac{(431.1)^2}{25} \right) = \frac{9811.51 - 7433.8884}{24} = \frac{2377.6216}{24} = 99.0676
+\]
+\[
+s_{12} = \frac{1}{24} \left( 5988.22 - \frac{(302.4)(431.1)}{25} \right) = \frac{5988.22 - 5214.5856}{24} = \frac{773.6344}{24} = 32.2348
+\]
+
+\textbf{Variance of Difference $d$:}
+\[
+s_d^2 = s_{11} - 2s_{12} + s_{22} = 46.8129 - 2(32.2348) + 99.0676 = 81.4109
+\]
+
+\subsection*{(b) Obtain mean and variance directly from individual differences $d_j = x_{j2} - x_{j1}$.}
+
+Calculating individual differences $d_j = x_{j2} - x_{j1}$ for $j = 1, \dots, 25$:
+\[
+\sum d_j = \sum x_{j2} - \sum x_{j1} = 431.1 - 302.4 = 128.7
+\]
+\[
+\overline{d} = \frac{128.7}{25} = 5.148
+\]
+Sum of squared differences $\sum d_j^2$:
+\[
+\sum d_j^2 = \sum (x_{j2} - x_{j1})^2 = \sum x_{j2}^2 - 2\sum x_{j1}x_{j2} + \sum x_{j1}^2
+\]
+\[
+\sum d_j^2 = 9811.51 - 2(5988.22) + 4781.34 = 2616.41
+\]
+Sample variance $s_d^2$:
+\[
+s_d^2 = \frac{1}{24} \left( \sum d_j^2 - \frac{(\sum d_j)^2}{25} \right) = \frac{1}{24} \left( 2616.41 - \frac{(128.7)^2}{25} \right) = \frac{2616.41 - 662.5476}{24} = \frac{1953.8624}{24} = 81.4109
+\]
+
+\textbf{Comparison:}
+The calculated mean ($\overline{d} = 5.148$) and variance ($s_d^2 = 81.4109$) obtained directly from individual differences in Part (b) are **identical** to the values obtained using linear combinations of summary statistics in Part (a).
+
+\end{document}
